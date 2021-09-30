@@ -29,13 +29,6 @@ function ElevationScroll(props) {
         elevation: trigger ? 4 : 0
     })
 }
-// const tabColor = {
-//     fontFamily: 'Railway',
-//     textTransform: 'none',
-//     fontWeight: '700',
-//     fontSize: '1rem',
-//     color: 'white'
-// }
 
 const useStyles = makeStyles(theme => ({
     toolbarMargin: {
@@ -110,12 +103,12 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.common.orange
     },
     drawerItemSelected: {
-        "& .MuiListItemText-root": {
+        '& .MuiListItemText-root': {
             opacity: 1
-        },
+        }
     },
     appbar: {
-        zIndex: theme.zIndex.modal + 1,
+        zIndex: theme.zIndex.modal + 1
     }
 }))
 
@@ -125,15 +118,13 @@ const Header = props => {
     const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
     const matches = useMediaQuery(theme.breakpoints.down('md'))
 
-    const [value, setValue] = React.useState(0)
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [openMenu, setOpenMenu] = React.useState(false)
-    const [selectedIndex, setSelectedIndex] = React.useState(0)
     const [openDrawer, setOpenDrawer] = React.useState(false)
 
     const handleChange = (event, newValue) => {
         // event.preventDefault();
-        setValue(newValue)
+        props.setValue(newValue)
     }
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
@@ -143,7 +134,7 @@ const Header = props => {
     const handleMenuItemClick = (e, index) => {
         setAnchorEl(null)
         setOpenMenu(false)
-        setSelectedIndex(index)
+        props.setSelectedIndex(index)
     }
 
     const handleClose = event => {
@@ -151,85 +142,91 @@ const Header = props => {
         setOpenMenu(false)
     }
 
-    const menuOptions = [
-        {
-            name: 'Services',
-            path: '/services',
-            activeIndex: 1,
-            selectedIndex: 0
-        },
-        {
-            name: 'Custom Software Development',
-            path: '/customsoftware',
-            activeIndex: 1,
-            selectedIndex: 1
-        },
-        {
-            name: 'Mobile App Development',
-            path: '/mobileapps',
-            activeIndex: 1,
-            selectedIndex: 2
-        },
-        {
-            name: 'Website Development',
-            path: '/websites',
-            activeIndex: 1,
-            selectedIndex: 3
-        }
-    ]
+    const menuOptions = React.useMemo(
+        () => [
+            {
+                name: 'Services',
+                path: '/services',
+                activeIndex: 1,
+                selectedIndex: 0
+            },
+            {
+                name: 'Custom Software Development',
+                path: '/customsoftware',
+                activeIndex: 1,
+                selectedIndex: 1
+            },
+            {
+                name: 'Mobile App Development',
+                path: '/mobileapps',
+                activeIndex: 1,
+                selectedIndex: 2
+            },
+            {
+                name: 'Website Development',
+                path: '/websites',
+                activeIndex: 1,
+                selectedIndex: 3
+            }
+        ],
+        []
+    )
 
-    const routes = [
-        {
-            name: 'Home',
-            link: '/',
-            activeIndex: 0
-        },
-        {
-            name: 'Services',
-            link: '/services',
-            activeIndex: 1,
-            ariaOwns: anchorEl ? 'simple-menu' : undefined,
-            ariaPopup: anchorEl ? true : undefined,
-            mousOver: e => handleClick(e)
-        },
-        {
-            name: 'The Revolution',
-            activeIndex: 2,
-            link: '/revolution'
-        },
-        {
-            name: 'About Us',
-            link: '/about',
-            activeIndex: 3
-        },
-        {
-            name: 'Contact Us',
-            link: '/contact',
-            activeIndex: 4
-        }
-    ]
+    const routes = React.useMemo(
+        () => [
+            {
+                name: 'Home',
+                link: '/',
+                activeIndex: 0
+            },
+            {
+                name: 'Services',
+                link: '/services',
+                activeIndex: 1,
+                ariaOwns: anchorEl ? 'simple-menu' : undefined,
+                ariaPopup: anchorEl ? true : undefined,
+                mousOver: e => handleClick(e)
+            },
+            {
+                name: 'The Revolution',
+                activeIndex: 2,
+                link: '/revolution'
+            },
+            {
+                name: 'About Us',
+                link: '/about',
+                activeIndex: 3
+            },
+            {
+                name: 'Contact Us',
+                link: '/contact',
+                activeIndex: 4
+            }
+        ],
+        [anchorEl]
+    )
 
     React.useEffect(() => {
         [...menuOptions, ...routes].forEach(route => {
             switch (window.location.pathname) {
                 case `${route.link}`:
-                    if (value !== route.activeIndex) {
-                        setValue(route.activeIndex)
-                        if (route.selectedIndex && route.selectedIndex !== selectedIndex) {
-                            setSelectedIndex(route.selectedIndex)
+                    if (props.value !== route.activeIndex) {
+                        props.setValue(route.activeIndex)
+                        if (route.selectedIndex && route.selectedIndex !== props.selectedIndex) {
+                            props.setSelectedIndex(route.selectedIndex)
                         }
                     }
                     break
                 default:
                     break
             }
-        })
-    }, [value, menuOptions, selectedIndex, routes])
+        })// eslint-disable-next-line
+    }, [props.value, menuOptions, props.valueselectedIndex, routes])
 
     const tabs = (
         <>
             <Tabs
-                value={value}
+                value={props.value}
                 onChange={handleChange}
                 className={classes.tabContainer}
                 indicatorColor='primary'
@@ -298,9 +295,9 @@ const Header = props => {
                             key={`${option}${index}`}
                             onClick={e => {
                                 handleMenuItemClick(e, index)
-                                setValue(1)
+                                props.setValue(1)
                             }}
-                            selected={index === selectedIndex && value === 1}
+                            selected={index === props.selectedIndex && props.value === 1}
                             component={Link}
                             to={option.path}
                             classes={{ root: classes.menuItem }}
@@ -332,17 +329,14 @@ const Header = props => {
                             button
                             component={Link}
                             to={route.link}
-                            selected={value === route.activeIndex}
+                            selected={props.value === route.activeIndex}
                             classes={{ selected: classes.drawerItemSelected }}
                             onClick={() => {
                                 setOpenDrawer(false)
-                                setValue(route.activeIndex)
+                                props.setValue(route.activeIndex)
                             }}
                         >
-                            <ListItemText
-                                className={classes.drawerItem}
-                                disableTypography
-                            >
+                            <ListItemText className={classes.drawerItem} disableTypography>
                                 {route.name}
                             </ListItemText>
                         </ListItem>
@@ -460,19 +454,19 @@ const Header = props => {
                     <ListItem
                         onClick={() => {
                             setOpenDrawer(false)
-                            setValue(5)
+                            props.useStatesetValue(5)
                         }}
                         divider
                         button
                         component={Link}
                         to='/estimate'
-                        classes={{ root: classes.drawerItemEstimate, selected: classes.drawerItemSelected }}
-                        selected={value === 5}
+                        classes={{
+                            root: classes.drawerItemEstimate,
+                            selected: classes.drawerItemSelected
+                        }}
+                        selected={props.useStatevalue === 5}
                     >
-                        <ListItemText
-                            className={classes.drawerItem}
-                            disableTypography
-                        >
+                        <ListItemText className={classes.drawerItem} disableTypography>
                             Free Estimate
                         </ListItemText>
                     </ListItem>
@@ -497,7 +491,7 @@ const Header = props => {
                             component={Link}
                             to='/'
                             disableRipple
-                            onClick={() => setValue(0)}
+                            onClick={() => props.setValue(0)}
                             className={classes.logoContainer}
                         >
                             <img src={logo} alt='company-logo' className={classes.logo} />
