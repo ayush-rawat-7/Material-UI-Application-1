@@ -219,7 +219,10 @@ const Header = props => {
                             props.setSelectedIndex(route.selectedIndex)
                         }
                     }
-                    break
+                    break;
+                case "/estimate":
+                    props.setValue(5);
+                    break;
                 default:
                     break
             }
@@ -276,7 +279,12 @@ const Header = props => {
                     to='contact'
                 /> */}
             </Tabs>
-            <Button variant='contained' color='secondary' className={classes.button}>
+            <Button variant='contained' color='secondary'
+                component={Link}
+                to="/estimate"
+                className={classes.button}
+                onClick={() => props.setValue(50)}
+            >
                 Free Estimate
             </Button>
             <Menu

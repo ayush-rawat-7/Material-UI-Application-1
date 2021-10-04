@@ -41,6 +41,7 @@ export default createTheme({
             lineHeight: 1.5,
         },
         h3: {
+            fontFamily: "Pacifico",
             fontSize: '2.5rem',
             color: arcBlue
         },
@@ -54,6 +55,11 @@ export default createTheme({
             fontSize: '1.25rem',
             fontWeight: '300',
             color: arcGrey,
+        },
+        subtitle2: {
+            color: "#fff",
+            fontSize: '1.25rem',
+            fontWeight: '300'
         },
         learnButton: {
             borderColor: arcBlue,
