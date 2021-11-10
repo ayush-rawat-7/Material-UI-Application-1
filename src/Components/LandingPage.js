@@ -205,7 +205,6 @@ export const LandingPage = (props) => {
                             component={Link}
                             to="/customsoftware"
                             onClick={() => { props.setValue(1); props.setSelectedIndex(1); }}
-
                             className={classes.learnButton}>
                             <span style={{ marginRight: 10 }}>Learn More</span>
                             <ButtonArrow width={10} height={10} fill={theme.palette.common.blue}></ButtonArrow>
@@ -358,7 +357,10 @@ export const LandingPage = (props) => {
                                         component={Link}
                                         to="/contact"
                                         onClick={() => props.setValue(4)}
-                                        style={{ color: '#fff', borderColor: "#fff" }}
+                                        style={{
+                                            color: '#fff',
+                                            borderColor: "#fff"
+                                        }}
                                         variant="outlined" className={classes.learnButton}
                                     >
                                         <span style={{ marginRight: 10 }}>Learn More</span>
@@ -376,7 +378,6 @@ export const LandingPage = (props) => {
                 <CallToAction setValue={props.setValue} />
             </Grid>
             {/* -------------call to action block End--------- */}
-
         </Grid>
     )
 }
